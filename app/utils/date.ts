@@ -28,6 +28,19 @@ export function monthLabel(key: string): string {
   return `${BULAN[m - 1]} ${y}`
 }
 
+/** Daftar bulan YYYY-MM dari `from` sampai `to` (inklusif). */
+export function monthRange(from: string, to: string): string[] {
+  const out: string[] = []
+  let [y, m] = from.split('-').map(Number)
+  const [ty, tm] = to.split('-').map(Number)
+  while (y < ty || (y === ty && m <= tm)) {
+    out.push(`${y}-${String(m).padStart(2, '0')}`)
+    m++
+    if (m > 12) { m = 1; y++ }
+  }
+  return out
+}
+
 export function uid(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }

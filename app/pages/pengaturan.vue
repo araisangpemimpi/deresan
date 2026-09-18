@@ -58,7 +58,7 @@
       <template #content>
         <UCard>
           <template #header><h3 class="font-bold">Hapus semua data?</h3></template>
-          <p class="text-sm text-gray-500">Murajaah, kualitas, snapshot, dan pengaturan akan dihapus dari HP ini.</p>
+          <p class="text-sm text-gray-500">Murajaah, kualitas, dan pengaturan akan dihapus dari HP ini.</p>
           <div class="flex gap-2 mt-3">
             <UButton variant="soft" class="flex-1 justify-center" @click="confirmReset = false">Batal</UButton>
             <UButton color="error" class="flex-1 justify-center" @click="doReset">Ya, hapus</UButton>
@@ -73,7 +73,6 @@
 const settings = useSettingsStore()
 const murajaah = useMurajaahStore()
 const quality = useQualityStore()
-const snapshots = useSnapshotStore()
 
 const nama = ref(settings.nama)
 const targetModel = computed({
@@ -89,12 +88,12 @@ watch(() => settings.nama, v => { nama.value = v })
 function payload() {
   return {
     app: 'deresan',
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
     settings: settings.$state,
     logs: murajaah.logs,
     errors: quality.errors,
-    snapshots: snapshots.items,
+    qualityHistory: quality.history,
   }
 }
 
@@ -116,8 +115,7 @@ async function onImport(e: Event) {
     const data = JSON.parse(await f.text())
     if (data.settings) settings.importJSON(JSON.stringify(data.settings))
     if (Array.isArray(data.logs)) murajaah.importLogs(data.logs)
-    if (data.errors) quality.importData(data.errors)
-    if (Array.isArray(data.snapshots)) snapshots.importData(data.snapshots)
+    if (data.errors) quality.importData(data.errors, data.qualityHistory)
     jsonPreview.value = 'Import berhasil ✅'
   } catch {
     jsonPreview.value = 'File tidak valid ❌'
@@ -127,7 +125,6 @@ async function onImport(e: Event) {
 function doReset() {
   murajaah.reset()
   quality.reset()
-  snapshots.reset()
   settings.reset()
   confirmReset.value = false
 }
