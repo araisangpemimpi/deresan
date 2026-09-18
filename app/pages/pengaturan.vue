@@ -42,6 +42,26 @@
 
     <UCard>
       <template #header>
+        <h2 class="font-semibold text-sm">Tampilan</h2>
+        <p class="text-xs text-gray-500">Pilih tema terang, gelap, atau mengikuti sistem HP</p>
+      </template>
+      <div class="grid grid-cols-3 gap-1 rounded-xl bg-gray-100 dark:bg-gray-800 p-1">
+        <UButton
+          v-for="opt in themeOpts"
+          :key="opt.value"
+          :icon="opt.icon"
+          class="justify-center"
+          :variant="colorMode.preference === opt.value ? 'solid' : 'ghost'"
+          :color="colorMode.preference === opt.value ? 'primary' : 'neutral'"
+          @click="colorMode.preference = opt.value"
+        >
+          {{ opt.label }}
+        </UButton>
+      </div>
+    </UCard>
+
+    <UCard>
+      <template #header>
         <h2 class="font-semibold text-sm">Juz wajib (baru dihafal / diperbaiki)</h2>
         <p class="text-xs text-gray-500">Ketuk untuk pilih/batalkan</p>
       </template>
@@ -98,6 +118,13 @@
 const settings = useSettingsStore()
 const murajaah = useMurajaahStore()
 const quality = useQualityStore()
+const colorMode = useColorMode()
+
+const themeOpts = [
+  { value: 'light', label: 'Terang', icon: 'i-lucide-sun' },
+  { value: 'system', label: 'Sistem', icon: 'i-lucide-monitor-smartphone' },
+  { value: 'dark', label: 'Gelap', icon: 'i-lucide-moon' },
+] as const
 
 const nama = ref(settings.nama)
 const fileEl = ref<HTMLInputElement | null>(null)

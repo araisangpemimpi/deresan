@@ -6,6 +6,12 @@ export default defineNuxtConfig({
   // offline-first (localStorage) + PWA yang diserve sebagai file statis.
   ssr: false,
 
+  colorMode: {
+    preference: 'system',
+    fallback: 'light',
+    storageKey: 'deresan-color-mode',
+  },
+
   modules: [
     '@nuxt/ui',
     '@pinia/nuxt',

@@ -9,9 +9,16 @@
         </h1>
         <p class="text-xs text-gray-500">Reminder murajaah harian & kualitas hafalan</p>
       </div>
-      <UBadge :color="doneToday >= target ? 'success' : 'warning'" variant="subtle" size="lg">
-        {{ doneToday }}/{{ target }} juz
-      </UBadge>
+      <div class="flex items-center gap-2 shrink-0">
+        <UButton
+          :icon="colorMode.value === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
+          variant="soft" color="neutral" aria-label="Ganti tema terang/gelap"
+          @click="colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'"
+        />
+        <UBadge :color="doneToday >= target ? 'success' : 'warning'" variant="subtle" size="lg">
+          {{ doneToday }}/{{ target }} juz
+        </UBadge>
+      </div>
     </header>
 
     <!-- Reminder target harian: klik -> /target -->
@@ -98,6 +105,7 @@ import { monthKey } from '~/utils/date'
 const settings = useSettingsStore()
 const murajaah = useMurajaahStore()
 const quality = useQualityStore()
+const colorMode = useColorMode()
 const router = useRouter()
 
 const target = computed(() => settings.targetJuzPerHari)
