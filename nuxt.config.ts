@@ -46,9 +46,13 @@ export default defineNuxtConfig({
     registerType: 'autoUpdate',
     includeAssets: ['icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'],
     manifest: {
+      id: '/',
       name: 'Deresan — Murajaah Harian',
       short_name: 'Deresan',
       description: 'Reminder murajaah harian dan manajemen kualitas hafalan Al-Quran. Full offline.',
+      lang: 'id',
+      dir: 'ltr',
+      categories: ['education', 'lifestyle', 'utilities'],
       theme_color: '#059669',
       background_color: '#ffffff',
       display: 'standalone',

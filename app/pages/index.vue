@@ -38,6 +38,23 @@
       </UCard>
     </NuxtLink>
 
+    <!-- Banner pasang aplikasi (muncul saat browser mengizinkan install) -->
+    <UCard v-if="!install.installed && install.canPrompt" class="border-emerald-300 dark:border-emerald-800">
+      <div class="flex items-center gap-3">
+        <div class="size-11 shrink-0 rounded-2xl bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center">
+          <UIcon name="i-lucide-smartphone" class="size-6 text-emerald-600 dark:text-emerald-300" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-bold text-sm">Pasang Deresan di HP 📲</p>
+          <p class="text-xs text-gray-500">Ikon di home screen, buka cepat & tetap jalan offline.</p>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-3">
+        <UButton color="success" class="flex-1 justify-center" icon="i-lucide-download" @click="install.install()">Pasang</UButton>
+        <UButton variant="ghost" color="neutral" @click="install.dismiss()">Nanti</UButton>
+      </div>
+    </UCard>
+
     <!-- Juz wajib hari ini -->
     <UCard>
       <template #header>
@@ -106,6 +123,7 @@ const settings = useSettingsStore()
 const murajaah = useMurajaahStore()
 const quality = useQualityStore()
 const colorMode = useColorMode()
+const install = useInstall()
 const router = useRouter()
 
 const target = computed(() => settings.targetJuzPerHari)

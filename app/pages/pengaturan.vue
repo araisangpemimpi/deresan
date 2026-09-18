@@ -2,6 +2,45 @@
   <div class="px-4 pt-5 space-y-4">
     <h1 class="text-xl font-bold">Pengaturan ⚙️</h1>
 
+    <UCard class="border-emerald-300 dark:border-emerald-800">
+      <template #header>
+        <div class="flex items-center gap-2">
+          <UIcon name="i-lucide-smartphone" class="size-5 text-emerald-600" />
+          <h2 class="font-semibold text-sm">Pasang di HP</h2>
+        </div>
+      </template>
+
+      <!-- Sudah terpasang -->
+      <div v-if="install.installed" class="flex items-center gap-2 text-sm">
+        <UIcon name="i-lucide-badge-check" class="size-5 text-emerald-600 shrink-0" />
+        <p><b>Sudah terpasang</b> — Deresan bisa dibuka dari home screen & jalan offline. ✅</p>
+      </div>
+
+      <!-- Prompt otomatis tersedia (Android/Chrome) -->
+      <div v-else-if="install.canPrompt" class="space-y-3">
+        <p class="text-sm text-gray-500">Pasang Deresan sebagai aplikasi: ikon di home screen, layar penuh, tetap jalan tanpa internet.</p>
+        <UButton color="success" size="lg" class="w-full justify-center" icon="i-lucide-download" @click="install.install()">
+          Pasang sekarang
+        </UButton>
+      </div>
+
+      <!-- Manual: iOS & browser lain -->
+      <div v-else class="space-y-2 text-sm">
+        <template v-if="install.isIOS">
+          <p class="text-gray-500">iPhone tidak memunculkan tombol otomatis. Caranya:</p>
+          <ol class="space-y-1.5 text-gray-700 dark:text-gray-200">
+            <li class="flex gap-2"><UBadge variant="subtle" color="neutral">1</UBadge> Buka Deresan di <b>Safari</b></li>
+            <li class="flex gap-2"><UBadge variant="subtle" color="neutral">2</UBadge> Ketuk ikon <UIcon name="i-lucide-share" class="size-4 self-center" /> <b>Bagikan</b> di bawah layar</li>
+            <li class="flex gap-2"><UBadge variant="subtle" color="neutral">3</UBadge> Pilih <b>Add to Home Screen</b> → <b>Add</b></li>
+          </ol>
+        </template>
+        <template v-else>
+          <p class="text-gray-500">Ketuk menu <b>⋮</b> browser lalu pilih <b>Install app / Add to Home screen</b>.</p>
+          <p class="text-xs text-gray-400">Chrome Android biasanya juga memunculkan banner pasang otomatis di halaman depan.</p>
+        </template>
+      </div>
+    </UCard>
+
     <UCard>
       <template #header><h2 class="font-semibold text-sm">Profil & target</h2></template>
       <div class="space-y-4">
@@ -119,6 +158,7 @@ const settings = useSettingsStore()
 const murajaah = useMurajaahStore()
 const quality = useQualityStore()
 const colorMode = useColorMode()
+const install = useInstall()
 
 const themeOpts = [
   { value: 'light', label: 'Terang', icon: 'i-lucide-sun' },
