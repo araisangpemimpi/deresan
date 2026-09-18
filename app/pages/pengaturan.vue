@@ -4,15 +4,37 @@
 
     <UCard>
       <template #header><h2 class="font-semibold text-sm">Profil & target</h2></template>
-      <div class="space-y-3">
-        <UFormField label="Nama panggilan">
-          <UInput v-model="nama" placeholder="cth: Ahmad" @change="settings.setNama(nama)" />
+      <div class="space-y-4">
+        <UFormField label="Nama panggilan" description="Ditampilkan sebagai sapaan di halaman depan">
+          <UInput
+            v-model="nama"
+            placeholder="cth: Ahmad"
+            size="lg"
+            icon="i-lucide-user"
+            class="w-full"
+            @change="settings.setNama(nama)"
+          >
+            <template v-if="nama" #trailing>
+              <UButton icon="i-lucide-x" variant="ghost" color="neutral" size="xs" @click="nama = ''; settings.setNama('')" aria-label="Hapus nama" />
+            </template>
+          </UInput>
         </UFormField>
-        <UFormField label="Target juz per hari">
-          <div class="flex items-center gap-2">
-            <UButton icon="i-lucide-minus" variant="outline" @click="settings.setTarget(settings.targetJuzPerHari - 1)" />
-            <UInputNumber v-model="targetModel" :min="1" :max="30" class="flex-1" />
-            <UButton icon="i-lucide-plus" variant="outline" @click="settings.setTarget(settings.targetJuzPerHari + 1)" />
+        <UFormField label="Target juz per hari" description="Jumlah juz yang diingatkan setiap hari">
+          <div class="flex items-stretch gap-2">
+            <UButton
+              icon="i-lucide-minus" size="lg" variant="outline" class="w-14 justify-center shrink-0"
+              :disabled="settings.targetJuzPerHari <= 1"
+              @click="settings.setTarget(settings.targetJuzPerHari - 1)" aria-label="Kurangi target"
+            />
+            <div class="flex-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center py-2">
+              <span class="text-3xl font-extrabold leading-none">{{ settings.targetJuzPerHari }}</span>
+              <span class="text-[11px] text-gray-500 mt-0.5">juz / hari</span>
+            </div>
+            <UButton
+              icon="i-lucide-plus" size="lg" variant="outline" class="w-14 justify-center shrink-0"
+              :disabled="settings.targetJuzPerHari >= 30"
+              @click="settings.setTarget(settings.targetJuzPerHari + 1)" aria-label="Tambah target"
+            />
           </div>
         </UFormField>
       </div>
@@ -38,13 +60,16 @@
     </UCard>
 
     <UCard>
-      <template #header><h2 class="font-semibold text-sm">Backup offline (JSON)</h2></template>
+      <template #header>
+        <h2 class="font-semibold text-sm">Backup offline (JSON)</h2>
+        <p class="text-xs text-gray-500">Simpan & pulihkan seluruh data (murajaah, kualitas, pengaturan)</p>
+      </template>
       <div class="flex gap-2">
-        <UButton icon="i-lucide-download" variant="soft" class="flex-1 justify-center" @click="exportJSON">Export</UButton>
-        <UButton icon="i-lucide-upload" variant="soft" class="flex-1 justify-center" @click="fileEl?.click()">Import</UButton>
+        <UButton icon="i-lucide-download" variant="soft" size="lg" class="flex-1 justify-center" @click="exportJSON">Export</UButton>
+        <UButton icon="i-lucide-upload" variant="soft" size="lg" class="flex-1 justify-center" @click="fileEl?.click()">Import</UButton>
         <input ref="fileEl" type="file" accept="application/json" class="hidden" @change="onImport" />
       </div>
-      <UTextarea v-model="jsonPreview" :rows="3" readonly class="mt-2 text-[10px]" />
+      <UTextarea v-model="jsonPreview" :rows="2" readonly placeholder="Status backup akan muncul di sini…" class="w-full font-mono mt-3" />
     </UCard>
 
     <UCard>
@@ -75,10 +100,6 @@ const murajaah = useMurajaahStore()
 const quality = useQualityStore()
 
 const nama = ref(settings.nama)
-const targetModel = computed({
-  get: () => settings.targetJuzPerHari,
-  set: (v: number) => settings.setTarget(v),
-})
 const fileEl = ref<HTMLInputElement | null>(null)
 const confirmReset = ref(false)
 const jsonPreview = ref('')
